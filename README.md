@@ -1,3 +1,12 @@
+---
+title: Meta Hack Final
+emoji: 🚀
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # CyberBench: Building a Self-Improving Multi-Agent Cybersecurity Evaluation System
 
 ---

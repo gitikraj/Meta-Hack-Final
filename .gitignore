@@ -1,0 +1,49 @@
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual environment ───────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Environment / secrets ────────────────────────────────────
+.env
+
+# ── SBERT models (large binary files) ────────────────────────
+sbert/base_model/
+sbert/model/
+checkpoints/
+
+# ── RL checkpoints (generated at runtime) ────────────────────
+rl_checkpoints/
+rl_training.log
+
+# ── Leaderboard (generated at runtime) ───────────────────────
+data/leaderboard.json
+
+# ── Training logs / submission artifacts ─────────────────────
+training_logs/
+submission_package/
+submission_*.zip
+
+# ── Node.js ──────────────────────────────────────────────────
+web/node_modules/
+web/.next/
+
+# ── IDE / editor ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS files ─────────────────────────────────────────────────
+Thumbs.db
+Desktop.ini
+.DS_Store

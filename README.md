@@ -459,8 +459,8 @@ final_meta_hack/
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/gitikraj/final_meta_hack.git
-cd final_meta_hack
+git clone https://github.com/gitikraj/Meta-Hack-Final.git
+cd Meta-Hack-Final
 pip install -r requirements.txt
 
 # 2. Configure keys

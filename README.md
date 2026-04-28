@@ -405,24 +405,92 @@ Results are saved to `submission_package/eval_results.json` and visualized as gr
 ## 14. Repository Structure
 
 ```
-cyberbench/
-├── agents/
+final_meta_hack/
+├── agents/                     # Multi-agent pipeline
 │   ├── log_analyst.py          # Log classification, IOC extraction, attack staging
 │   ├── threat_intel.py         # MITRE ATT&CK mapping and IOC enrichment
 │   ├── vuln_scanner.py         # CVE detection against network assets
 │   ├── orchestrator.py         # Unified briefing synthesis
-│   ├── target_agent.py         # 8-section incident response generator
-│   └── judge.py                # Multi-dimension response scoring
-├── rl/
-│   ├── reward.py               # Reward shaping, streak bonus, verdict thresholds
-│   └── config.py               # Dimension weights, baseline, scale
+│   ├── target_agent.py         # Groq-based incident response (Part 1 / UI)
+│   ├── judge.py                # Multi-dimension response scoring (SBERT + Groq)
+│   └── utils.py                # Shared Groq async client
+├── pipeline/                   # Orchestration & metrics
+│   ├── runner.py               # 10-stage pipeline executor
+│   ├── case_selector.py        # Weighted random scenario selection
+│   ├── env_loader.py           # Case environment builder
+│   ├── semantic.py             # Fine-tuned SBERT similarity scorer
+│   └── metrics.py              # Score computation + leaderboard persistence
+├── server/                     # FastAPI REST backend
+│   └── main.py                 # /api/pipeline/trigger, /api/leaderboard, /api/rl/*
+├── rl/                         # RL self-improvement loop
+│   ├── environment.py          # Episode environment wrapper
+│   ├── reward.py               # 6-dimension reward shaper
+│   ├── experience_buffer.py    # Replay buffer
+│   └── trainer.py              # RL training loop
+├── qwen_training/              # Part 2 — Local Qwen2.5-3B training
+│   ├── qwen_target_agent.py    # Drop-in Qwen agent (4-bit NF4 + LoRA)
+│   ├── data_collector.py       # Episode collection (Groq briefing + Qwen + Judge)
+│   ├── rft_trainer.py          # Rejection-Sampling Fine-Tuning loop
+│   ├── run_training.py         # CLI entry point
+│   └── verify_training.py      # CPU-safe end-to-end training verification
+├── sbert/                      # Domain-specific SBERT fine-tuning
+│   ├── train.py                # Fine-tunes all-MiniLM-L6-v2 on cyber pairs
+│   ├── corpus/cyber_pairs.json # 25 positive + negative sentence pairs
+│   └── download_model.py       # Downloads base model from HuggingFace
+├── cyberbench_env/             # OpenEnv environment wrapper
 ├── data/
-│   ├── scenarios.json          # 54 synthetic attack scenarios
-│   └── ground_truth.py         # Expected IOCs, techniques, actions per scenario
-├── web_simulation/             # Interactive SOC-like web interface
-├── training_logs/              # Per-run logs, loss curves, reward history
-├── submission_package/         # Final eval artifacts and manifest
-└── notebook.ipynb              # End-to-end pipeline: SFT → PPO RL → Eval
+│   └── scenarios.json          # 10 structured cybersecurity incident scenarios
+├── web/                        # Next.js 15 SOC dashboard (Part 1 UI)
+│   └── src/app/                # Dashboard / Pipeline / RL / Leaderboard / Cases
+├── cyberbench_pipeline.ipynb   # Colab notebook — Qwen2.5-3B RFT training
+├── colab_training.ipynb        # Colab notebook — simplified training walkthrough
+├── app.py                      # Gradio app for HuggingFace Spaces
+├── Dockerfile                  # HuggingFace Spaces Docker config
+├── requirements.txt            # Core Python dependencies
+├── requirements_hf.txt         # HuggingFace Spaces dependencies
+└── .env.example                # API key template
+```
+
+---
+
+## 15. Quick Start
+
+### Part 1 — Groq UI Pipeline
+
+```bash
+# 1. Clone and install
+git clone https://github.com/gitikraj/final_meta_hack.git
+cd final_meta_hack
+pip install -r requirements.txt
+
+# 2. Configure keys
+cp .env.example .env
+# Edit .env and add your GROQ_API_KEY
+
+# 3. Train SBERT judge (first time only, ~2 min)
+python sbert/train.py
+
+# 4. Start backend
+python -m uvicorn server.main:app --port 8000
+
+# 5. Start frontend (in a new terminal)
+cd web && npm install && npm run dev
+# Open http://localhost:3000
+```
+
+### Part 2 — Qwen2.5-3B Training (Google Colab)
+
+1. Open `cyberbench_pipeline.ipynb` in [Google Colab](https://colab.research.google.com/)
+2. Set runtime to **T4 GPU** (Runtime → Change runtime type)
+3. Add `GROQ_API_KEY` to Colab secrets (key icon in left panel)
+4. Run all cells — training completes in ~45 min
+
+### HuggingFace Spaces
+
+```bash
+# Deploy the Gradio app
+# Set GROQ_API_KEY and HF_ADAPTER_REPO as Space secrets
+# Push to your HF Space — Dockerfile handles the rest
 ```
 
 ---

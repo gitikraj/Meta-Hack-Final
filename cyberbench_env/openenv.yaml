@@ -1,0 +1,22 @@
+name: cyberbench
+description: >
+  CyberBench — multi-agent cybersecurity incident analysis environment.
+  An RL agent receives a synthesised briefing (log analysis + vuln scan +
+  threat intel) and must produce a high-quality incident response that is
+  scored by an AI judge.
+
+version: "1.0.0"
+
+server:
+  module: cyberbench_env.server.app
+  attribute: app
+  port: 8000
+
+client:
+  module: cyberbench_env.client
+  class: CyberBenchClient
+
+models:
+  action: cyberbench_env.models.AnalyzeAction
+  observation: cyberbench_env.models.CyberObservation
+  state: cyberbench_env.models.CyberState

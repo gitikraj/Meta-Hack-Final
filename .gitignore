@@ -20,17 +20,36 @@ sbert/base_model/
 sbert/model/
 checkpoints/
 
+# ── Runtime logs ─────────────────────────────────────────────
+*.log
+server.out.log
+server.err.log
+
 # ── RL checkpoints (generated at runtime) ────────────────────
 rl_checkpoints/
-rl_training.log
+
+# ── Qwen training artifacts ───────────────────────────────────
+qwen_training/checkpoints/
+qwen_training/verify_checkpoints/
+qwen_training/collected_data.jsonl
+batch_eval_results.json
+training_trajectory.png
+score_breakdown.png
+*.safetensors
 
 # ── Leaderboard (generated at runtime) ───────────────────────
 data/leaderboard.json
+
+# ── Auto-generated docs ───────────────────────────────────────
+code_docs/
 
 # ── Training logs / submission artifacts ─────────────────────
 training_logs/
 submission_package/
 submission_*.zip
+
+# ── Claude Code internal ──────────────────────────────────────
+.claude/
 
 # ── Node.js ──────────────────────────────────────────────────
 web/node_modules/

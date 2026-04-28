@@ -56,6 +56,7 @@ def compute_metrics(
         "strengths": judge_result.get("strengths", ""),
         "gaps": judge_result.get("gaps", ""),
         "recommendation": judge_result.get("recommendation", ""),
+        "target_response": target_result.get("response", ""),
         "pipeline_stats": {
             "suspicious_entries": log_result.get("suspicious_entry_count", 0),
             "total_log_entries": log_result.get("total_entry_count", 0),

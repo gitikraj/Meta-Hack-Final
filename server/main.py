@@ -162,6 +162,9 @@ async def _execute_pipeline(run_id: str, req: TriggerRequest):
         state.update({
             "status": "completed",
             "stage": "Pipeline complete",
+            "case_id": result.get("case_id", ""),
+            "difficulty": result.get("difficulty", ""),
+            "category": result.get("category", ""),
             "scores": result.get("scores", {}),
             "verdict": result.get("verdict", "unknown"),
             "strengths": result.get("strengths", ""),
@@ -170,6 +173,7 @@ async def _execute_pipeline(run_id: str, req: TriggerRequest):
             "agent_confidence": result.get("agent_confidence", {}),
             "processing_times_ms": result.get("processing_times_ms", {}),
             "rl_feedback": result.get("rl_feedback"),
+            "target_response": result.get("target_response", ""),
             "raw": result,
         })
     except Exception as e:
@@ -216,7 +220,34 @@ async def get_result(run_id: str):
 
 @app.get("/api/leaderboard")
 async def leaderboard(sort_by: str = "overall", top: int = 50):
-    return {"entries": get_leaderboard(sort_by=sort_by, top_n=top)}
+    return get_leaderboard(sort_by=sort_by, top_n=top)
+
+
+@app.get("/api/pool")
+async def scenario_pool():
+    """Return the list of available scenarios for the Cases browser."""
+    import json as _json
+    scenarios_path = os.path.join(PROJECT_ROOT, "data", "scenarios.json")
+    try:
+        with open(scenarios_path) as f:
+            scenarios = _json.load(f)
+        return [
+            {
+                "case_id": s["case_id"],
+                "goal": s["goal"],
+                "difficulty": s["difficulty"],
+                "category": s["category"],
+                "tags": s.get("tags", []),
+            }
+            for s in scenarios
+        ]
+    except Exception as e:
+        return []
+
+
+@app.get("/api/cases")
+async def cases():
+    return await scenario_pool()
 
 
 @app.get("/api/history/{agent_name}")

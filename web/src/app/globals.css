@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --bg:        #070d14;
+  --surface:   #0d1524;
+  --surface2:  #111e30;
+  --border:    #1a2e4a;
+  --border2:   #1e3d5f;
+  --cyan:      #00d4ff;
+  --cyan-dim:  #0090b3;
+  --green:     #00ff88;
+  --green-dim: #00b860;
+  --red:       #ff4444;
+  --orange:    #ff9500;
+  --yellow:    #ffd700;
+  --text:      #c8d8e8;
+  --text-dim:  #607080;
+  --text-bright:#e8f4ff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ── Cards / Panels ── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.panel-inner {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* ── Cyan glow effects ── */
+.glow-cyan  { box-shadow: 0 0 12px rgba(0,212,255,0.25); }
+.glow-green { box-shadow: 0 0 12px rgba(0,255,136,0.25); }
+.glow-red   { box-shadow: 0 0 12px rgba(255,68,68,0.25); }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 16px; border-radius: 4px; font-size: 12px;
+  font-family: inherit; font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase; cursor: pointer; border: none;
+  transition: all 0.15s ease;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-cyan  { background: var(--cyan); color: #000; }
+.btn-cyan:hover:not(:disabled)  { background: #33ddff; box-shadow: 0 0 16px rgba(0,212,255,0.5); }
+.btn-green { background: var(--green); color: #000; }
+.btn-green:hover:not(:disabled) { background: #33ffaa; box-shadow: 0 0 16px rgba(0,255,136,0.5); }
+.btn-red   { background: var(--red); color: #fff; }
+.btn-red:hover:not(:disabled)   { background: #ff6666; }
+.btn-outline { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); }
+.btn-outline:hover:not(:disabled) { background: rgba(0,212,255,0.08); }
+.btn-ghost  { background: transparent; color: var(--text-dim); border: 1px solid var(--border2); }
+.btn-ghost:hover:not(:disabled)  { color: var(--text); border-color: var(--text-dim); }
+
+/* ── Terminal log ── */
+.terminal {
+  background: #040a10;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.7;
+  overflow-y: auto;
+}
+
+/* ── Score bar ── */
+.score-bar-track {
+  height: 6px; background: var(--surface2);
+  border-radius: 3px; overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%; border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Status dots ── */
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot-idle    { background: var(--text-dim); }
+.dot-running { background: var(--cyan); animation: pulse-dot 1s ease-in-out infinite; }
+.dot-done    { background: var(--green); }
+.dot-fail    { background: var(--red); }
+.dot-queued  { background: var(--orange); }
+
+/* ── Animations ── */
+@keyframes pulse-dot {
+  0%,100% { opacity:1; box-shadow: 0 0 4px var(--cyan); }
+  50%      { opacity:0.5; box-shadow: 0 0 10px var(--cyan); }
+}
+@keyframes blink-cursor { 0%,100% { opacity:1; } 50% { opacity:0; } }
+@keyframes slide-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes fade-in { from { opacity:0; } to { opacity:1; } }
+
+.animate-in  { animation: slide-in 0.25s ease forwards; }
+.animate-fade { animation: fade-in 0.3s ease forwards; }
+
+/* ── Grid background ── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Nav tabs ── */
+.nav-tab {
+  padding: 8px 20px; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim); border-bottom: 2px solid transparent;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  background: none; border-top: none; border-left: none; border-right: none;
+  font-family: inherit;
+}
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+/* ── Verdict badge ── */
+.badge { padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; }
+.badge-pass    { background: rgba(0,255,136,0.15); color: var(--green); border: 1px solid var(--green-dim); }
+.badge-partial { background: rgba(255,149,0,0.15); color: var(--orange); border: 1px solid #996600; }
+.badge-fail    { background: rgba(255,68,68,0.15);  color: var(--red);   border: 1px solid #882222; }
+
+/* ── Agent card ── */
+.agent-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 10px 14px;
+  transition: border-color 0.2s;
+}
+.agent-card.running { border-color: var(--cyan); box-shadow: 0 0 8px rgba(0,212,255,0.15); }
+.agent-card.done    { border-color: var(--green-dim); }
+.agent-card.fail    { border-color: var(--red); }
+
+/* ── Radar chart SVG ── */
+.radar-label { font-size: 9px; fill: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
